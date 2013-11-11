@@ -32,11 +32,16 @@
 
 			require(["Nucleus"], function (Nucleus) {
 
+				// One nucleus for main
 				var nucleusMain = new Nucleus(),
-					nucleusFooter = new Nucleus();
 
+				// One nucleus for the footer
+				nucleusFooter = new Nucleus();
+
+				// A simple model for saving each input
 				var model = new Model([]);
 
+				/// The fun plugin that is reused by Main and Footer
 				var funPlugin = {
 					color: function (dom, color) {
 						dom.style.color = color;
@@ -44,11 +49,12 @@
 
 					flash: function (dom) {
 						setInterval(function () {
-							dom.style.backgroundColor = ["red", "blue", "green", "yellow"][Math.floor(Math.random() * 4)]
+							dom.style.backgroundColor = ["purple", "blue", "green", "yellow", "red"][Math.floor(Math.random() * 4)]
 						}, 200);
 					}
 				};
 
+				// Add the plugins to main
 				nucleusMain.addAll({
 
 					"input": {
@@ -75,19 +81,21 @@
 						}
 					},
 
+					// fun is shared
 					"fun": funPlugin
 
 				});
 
+				// Add he plugin to Footer
 				nucleusFooter.add("fun", funPlugin);
 
+				// Bind main
 				nucleusMain.apply(document.querySelector("main"));
 
+				// Bind footer
 				nucleusFooter.apply(document.querySelector("footer"));
 
-
-
-
+				// The simple model
 				function Model(array) {
 					var _callback;
 
