@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Nucleus Demo</title>
+	</head>
+	<body>
+
+		<main>
+			<button data-example="alert: hi">Say Hi</button>
+		</main>
+
+
+		<script src="./nucleus-standalone.js"></script>
+		<script>
+
+			require(["Nucleus"], function (Nucleus) {
+
+				var nucleus = new Nucleus();
+
+				nucleus.add("example", {
+					alert: function (dom, text) {
+						dom.addEventListener("click", function () {
+							alert(text);
+						}, true);
+					}
+				});
+
+				nucleus.apply(document.querySelector("main"));
+
+			});
+
+		</script>
+	</body>
+
+</html>

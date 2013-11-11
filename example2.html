@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Nucleus Demo</title>
+	</head>
+	<body>
+
+		<main>
+			<span data-bind="tick: rate, 1000000"></span>
+		</main>
+
+
+		<script src="./nucleus-standalone.js"></script>
+		<script>
+
+			require(["Nucleus"], function (Nucleus) {
+
+				var nucleus = new Nucleus();
+
+				nucleus.add("bind", {
+					tick: function (dom, text, multiplier) {
+						setInterval(function () {
+							dom.innerText = text + ': ' + Math.random() * +multiplier;
+						}, 1000);
+					}
+				});
+
+				nucleus.apply(document.querySelector("main"));
+
+			});
+
+		</script>
+	</body>
+
+</html>
