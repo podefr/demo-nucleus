@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Nucleus Demo</title>
+	</head>
+	<body>
+
+		<main>
+			<input type="text" data-input="listen: keydown"></input>
+
+			<ul data-model="foreach">
+				<li></li>
+			</ul>
+
+		</main>
+
+
+		<script src="./nucleus-standalone.js"></script>
+		<script>
+
+			require(["Nucleus"], function (Nucleus) {
+
+				var nucleus = new Nucleus();
+
+				var model = new Model([]);
+
+				nucleus.addAll({
+
+					"input": {
+						listen: function (dom, event) {
+							dom.addEventListener(event, function onKeyDown(event) {
+								if (event.keyCode === 13) {
+									model.add(dom.value);
+									dom.value = "";
+								}
+							}, true);
+						}
+					},
+
+					"model": {
+						foreach: function (list) {
+							var listItem = list.children[0];
+							list.removeChild(listItem);
+
+							model.onUpdate(function (idx, value) {
+								var newItem = listItem.cloneNode(true);
+								newItem.innerHTML = value;
+								list.appendChild(newItem);
+							});
+						}
+					}
+
+				});
+
+				nucleus.apply(document.querySelector("main"));
+
+
+				function Model(array) {
+					var _callback;
+
+					this.add = function (value) {
+						_callback(array.push(value) -1, value);
+					};
+
+					this.onUpdate = function (callback) {
+						_callback = callback;
+					}
+				}
+
+			});
+
+		</script>
+	</body>
+
+</html>
