@@ -2,54 +2,28 @@
 <html>
 	<head>
 		<title>Nucleus Demo</title>
-		<style type="text/css">
-			footer {
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				height: 20px;
-				background-color: red;
-			}
-		</style>
 	</head>
 	<body>
 
 		<main>
 			<input type="text" data-input="listen: keydown" placeholder="type text here"></input>
 
-			<ul data-model="foreach" data-fun="color: blue">
+			<ul data-model="foreach">
 				<li></li>
 			</ul>
 		</main>
 
-		<footer data-fun="flash">
-
-		</footer>
 
 		<script src="./nucleus-standalone.js"></script>
 		<script>
 
 			require(["Nucleus"], function (Nucleus) {
 
-				var nucleusMain = new Nucleus(),
-					nucleusFooter = new Nucleus();
+				var nucleus = new Nucleus();
 
 				var model = new Model([]);
 
-				var funPlugin = {
-					color: function (dom, color) {
-						dom.style.color = color;
-					},
-
-					flash: function (dom) {
-						setInterval(function () {
-							dom.style.backgroundColor = ["red", "blue", "green", "yellow"][Math.floor(Math.random() * 4)]
-						}, 200);
-					}
-				};
-
-				nucleusMain.addAll({
+				nucleus.addAll({
 
 					"input": {
 						listen: function (dom, event) {
@@ -73,19 +47,11 @@
 								list.appendChild(newItem);
 							});
 						}
-					},
-
-					"fun": funPlugin
+					}
 
 				});
 
-				nucleusFooter.add("fun", funPlugin);
-
-				nucleusMain.apply(document.querySelector("main"));
-
-				nucleusFooter.apply(document.querySelector("footer"));
-
-
+				nucleus.apply(document.querySelector("main"));
 
 
 				function Model(array) {

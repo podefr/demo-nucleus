@@ -2,21 +2,103 @@
 <html>
 	<head>
 		<title>Nucleus Demo</title>
+		<style type="text/css">
+			footer {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: 20px;
+				background-color: red;
+			}
+		</style>
 	</head>
 	<body>
 
 		<main>
+			<input type="text" data-input="listen: keydown" placeholder="type text here"></input>
 
+			<ul data-model="foreach" data-fun="color: blue">
+				<li></li>
+			</ul>
 		</main>
 
+		<footer data-fun="flash">
+
+		</footer>
 
 		<script src="./nucleus-standalone.js"></script>
 		<script>
 
 			require(["Nucleus"], function (Nucleus) {
 
-				var nucleus = new Nucleus();
+				var nucleusMain = new Nucleus(),
+					nucleusFooter = new Nucleus();
 
+				var model = new Model([]);
+
+				var funPlugin = {
+					color: function (dom, color) {
+						dom.style.color = color;
+					},
+
+					flash: function (dom) {
+						setInterval(function () {
+							dom.style.backgroundColor = ["red", "blue", "green", "yellow"][Math.floor(Math.random() * 4)]
+						}, 200);
+					}
+				};
+
+				nucleusMain.addAll({
+
+					"input": {
+						listen: function (dom, event) {
+							dom.addEventListener(event, function onKeyDown(event) {
+								if (event.keyCode === 13 && dom.value) {
+									model.add(dom.value);
+									dom.value = "";
+								}
+							}, true);
+						}
+					},
+
+					"model": {
+						foreach: function (list) {
+							var listItem = list.children[0];
+							list.removeChild(listItem);
+
+							model.onUpdate(function (idx, value) {
+								var newItem = listItem.cloneNode(true);
+								newItem.innerHTML = value;
+								list.appendChild(newItem);
+							});
+						}
+					},
+
+					"fun": funPlugin
+
+				});
+
+				nucleusFooter.add("fun", funPlugin);
+
+				nucleusMain.apply(document.querySelector("main"));
+
+				nucleusFooter.apply(document.querySelector("footer"));
+
+
+
+
+				function Model(array) {
+					var _callback;
+
+					this.add = function (value) {
+						_callback(array.push(value) -1, value);
+					};
+
+					this.onUpdate = function (callback) {
+						_callback = callback;
+					}
+				}
 
 			});
 
